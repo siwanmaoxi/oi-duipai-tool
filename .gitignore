@@ -1,0 +1,39 @@
+# 编译生成的文件
+*.exe
+*.out
+*.o
+*.obj
+
+# 测试输入输出文件
+in.txt
+out1.txt
+out2.txt
+
+# IDE 和编辑器配置
+.vscode/
+.vs/
+.cph/
+.idea/
+*.swp
+*.swo
+*~
+
+# 数据文件
+data/
+*.zip
+*.rar
+*.7z
+
+# 其他杂项
+Misk/
+Data_structure_implementation/
+
+# Windows 系统文件
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS 系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
