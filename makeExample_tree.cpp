@@ -1,87 +1,56 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-mt19937 gen;
+mt19937 rng;
 
-// 生成 [l, r] 的随机整数
-int rdm(int l, int r) {
-    uniform_int_distribution<int> dis(l, r);
-    return dis(gen);
+void init(int c, char** v) {
+    rng.seed(time(0) + clock() + (c > 1 ? atoi(v[1]) * 10007 : 0));
 }
 
-// 初始化随机数种子（可传命令行参数）
-// 参数解释：
-//   - 默认用 time + clock 播种，确保每次运行不同
-//   - 如果命令行有参数（例如对拍时），则根据参数修正种子，实现“可复现”随机
-void initRand(int argc, char* argv[]) {
-    int seed = time(0) + clock();
-    if (argc > 1) seed += atoi(argv[1]) * 10007; // 对拍用：不同参数不同种子
-    gen.seed(seed);
+int rd(int l, int r) {
+    return uniform_int_distribution<int>(l, r)(rng);
 }
 
-int main(int argc, char* argv[]) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int main(int c, char** v) {
+    init(c, v);
 
-    initRand(argc, argv); // ★ 一行搞定随机初始化
+    int n = rd(2, 10);
 
-    int n = rdm(1, 10); // 随机生成 n
+    // 生成 Prüfer 序列
+    vector<int> p(n - 2), d(n + 1, 1);
+    for (int& x : p) x = rd(1, n), d[x]++;
 
-    if (n == 1) { cout << 1 << "\n"; return 0; }
+    // 构建树
+    priority_queue<int, vector<int>, greater<int>> q;
+    for (int i = 1; i <= n; i++) if (d[i] == 1) q.push(i);
 
-    // --- 生成随机 Prüfer 序列 ---
-    vector<int> prufer;
-    if (n >= 2) {
-        prufer.resize(n - 2);
-        for (int i = 0; i < n - 2; ++i) prufer[i] = rdm(1, n);
-    }
-
-    // --- 构建树 ---
-    vector<int> deg(n + 1, 1);
-    for (int x : prufer) ++deg[x];
-
-    priority_queue<int, vector<int>, greater<int>> pq;
-    for (int i = 1; i <= n; ++i)
-        if (deg[i] == 1) pq.push(i);
-
-//替换开始
+    // 输出格式1：边的形式（每行两个数字）
+    // 注释开始
     cout << n << "\n";
-    for (int x : prufer) {
-        int u = pq.top(); pq.pop();
+    for (int x : p) {
+        int u = q.top(); q.pop();
         cout << u << " " << x << "\n";
-        if (--deg[x] == 1) pq.push(x);
+        if (--d[x] == 1) q.push(x);
     }
-    int u = pq.top(); pq.pop();
-    int v = pq.top(); pq.pop();
-    cout << u << " " << v << "\n";
-//替换结束
-    return 0;
+    cout << q.top() << " ";
+    q.pop();
+    cout << q.top() << "\n";
+    // 注释结束
+
+    // 输出格式2：父节点数组形式（一行输出所有父节点）
+    // 注释开始
+    // vector<int> pa(n + 1);
+    // for (int x : p) {
+    //     int u = q.top(); q.pop();
+    //     pa[u] = x;
+    //     if (--d[x] == 1) q.push(x);
+    // }
+    // int a = q.top(); q.pop();
+    // int b = q.top(); q.pop();
+    // pa[a] = b; pa[b] = a;
+
+    // cout << n << "\n";
+    // for (int i = 2; i <= n; i++) cout << pa[i] << " \n"[i == n];
+    // 注释结束
+    
 }
-
-/*
-
-树，形式：
-5
-3 5 2 3
-
-
-    vector<int> parent(n + 1, 0);
-
-    for (int x : prufer) {
-        int u = pq.top(); pq.pop();
-        parent[u] = x; // u 的父亲是 x
-        if (--deg[x] == 1) pq.push(x);
-    }
-
-    int u = pq.top(); pq.pop();
-    int v = pq.top(); pq.pop();
-    parent[u] = v;
-    parent[v] = u; // 因为是无向树，互为父子
-
-    cout << n << "\n";
-    for (int i = 2; i <= n; ++i) {
-        cout << parent[i] << (i == n ? '\n' : ' ');
-    }
-
-*/
-

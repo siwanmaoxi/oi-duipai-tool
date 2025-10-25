@@ -1,26 +1,25 @@
 #include <bits/stdc++.h>
+using namespace std;
 
-int main() {
-    int n, m;
-    std::cin >> n >> m;
-    int pos = 0, neg = 0, zero = 0;
+mt19937 rng;
+
+// 初始化随机数种子
+void init(int c, char** v) {
+    rng.seed(time(0) + clock() + (c > 1 ? atoi(v[1]) * 10007 : 0));
+}
+
+// 返回 [l, r] 的随机整数
+int rd(int l, int r) {
+    return uniform_int_distribution<int>(l, r)(rng);
+}
+
+int main(int c, char** v) {
+    init(c, v);
+
+    int n = rd(1, 30), m = rd(1, 30);
+    cout << n << " " << m << "\n";
+
     for (int i = 0; i < n; i++) {
-      int x;
-      std::cin >> x;
-      if (x > 0) {
-        pos += 1;
-      } else if (x < 0) {
-        neg += 1;
-      } else {
-        zero += 1;
-      }
+        cout << rd(-1, 1) << " \n"[i == n - 1];
     }
-    int ans = std::abs(pos - m);
-    if ((pos > m && !zero && !neg) || (pos < m && pos + neg - 1 < m)) {
-      ans = -1;
-    }
-    std::cout << ans << '\n';
-  
-
-  return 0;
 }
