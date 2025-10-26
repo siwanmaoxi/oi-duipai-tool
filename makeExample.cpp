@@ -16,10 +16,28 @@ int rd(int l, int r) {
 int main(int c, char** v) {
     init(c, v);
 
-    int n = rd(1, 30), m = rd(1, 30);
-    cout << n << " " << m << "\n";
+    int n = rd(1, 10);
+    cout << n<< "\n";
+
+    vector<int> lis(n,0);
+
+    for (int i = 0; i < n; i++){
+        lis[i]=i+1;
+    }
+
+    for (int i = 0; i < n; i++){
+        int tp = rd(0,n-1);
+        int tmp;
+        tmp=lis[tp];
+        lis[tp]=lis[i];
+        lis[i]=tmp;
+    }
+
+
+
 
     for (int i = 0; i < n; i++) {
-        cout << rd(-1, 1) << " \n"[i == n - 1];
+        cout<<lis[i]<<" ";
     }
+    // cout<<"yes";
 }
